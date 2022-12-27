@@ -68,15 +68,6 @@ def get_sent_tokens(sentence):
     sentence_split = sentence_joined.split(" ")
     return sentence_split
 
-# Same as above but without phrases
-def get_sent_tokens_single(sentence):
-    list_tokens = []
-    sentence = sentence.lower()
-    list_tokens_sentence = nltk.tokenize.word_tokenize(sentence)
-    for token in list_tokens_sentence:
-        list_tokens.append(lemmatizer.lemmatize(token))
-    return list_tokens
-
 # Removes punctuation from list of tokens
 def remove_punctuations(lst):
     new_lst = []
@@ -90,7 +81,7 @@ def remove_punctuations(lst):
     return new_lst
 
 
-def clean_article(data, phrasal):
+def clean_article(data):
     stopwords = set(nltk.corpus.stopwords.words('english'))
     stopwords.update(["", "ha", "said", "wa", "nt", "would", "also", "could"])
     not_stopwords = ["he", "she", "she's", "he's", "herself", "himself", "her", "his", "hers", "him"]
@@ -99,10 +90,7 @@ def clean_article(data, phrasal):
 
     for sentence in data:
         sentence_tokens = []
-        if phrasal:
-            sentence_tokens = get_sent_tokens(sentence)
-        else:
-            sentence_tokens = get_sent_tokens_single(sentence)
+        sentence_tokens = get_sent_tokens(sentence)
         sentence_tokens = remove_punctuations(sentence_tokens)
         final_sentence = []
         for word in sentence_tokens:
@@ -113,18 +101,7 @@ def clean_article(data, phrasal):
 
     return final_article
 
-def main(phrasal):
-    print("Running script")
-
-    rawdata = []
-    with open("../data/testset.en.shuffled.deduped") as infile:
-        print("Data loaded")
-        for line in infile:
-            rawdata.append(line)
-
-    print("No. of sentences: ", len(rawdata))
-
-    tokenized_articles = clean_article(rawdata, phrasal)
+def main(data):
+    tokenized_articles = clean_article(data)
     print("Articles tokenized")
-
     return tokenized_articles
