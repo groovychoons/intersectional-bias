@@ -77,12 +77,12 @@ At this point, we have shown that the phrasal model performs better at showing s
 Research questions:
 - Can we better represent bias for intersectional identities using phrases (instead of single words/names) within word embedding models?
 - Can we better understand intersectional stereotypes through the use of these phrases?
+- Can we understand intersectional biases for more groups of people?
 
 Novel contributions:
 - Using phrases, allows us to look at identities previously not able to
+- Detecting intersectional bias for Asian and Middle Eastern Americans
 
 ## Success / evaluation metrics
 
-- The three key papers I'm following on from don't actually have any solid evaluation, just 'it looks less biased'
 - IBD/EIBD (Guo and Caliskan paper)
-- show that occupations are not scoring as highly in the race/gender subspaces, therefore there is less biased

@@ -1,40 +1,34 @@
 
+from gensim.models import KeyedVectors
 import numpy as np
 from sklearn.metrics.pairwise import cosine_similarity
 
 # NAMES
 
-african_female = ['Yvette', 'Aisha', 'Malika', 'Latisha', 'Keisha', 'Tanisha',
-                  'Tamika', 'Yolanda', 'Nichelle', 'Latoya', 'Lakisha', 'Shereen', 'Shaniqua',
-                  'Jasmine', 'Tia'][0:12]
-# delete:  Kenya
+african_female = ['aisha', 'lashelle', 'nichelle', 'shereen', 'temeka', 'ebony', 'latisha', 'shaniqua',
+                  'tameisha', 'teretha', 'jasmine', 'latonya', 'shanise', 'tanisha', 'tia', 'lakisha',
+                  'latoya', 'sharise', 'tashika', 'yolanda', 'lashandra', 'malika', 'shavonn',
+                  'tawanda', 'yvette']
 
-african_male = ['Lionel', 'Wardell',  'Jamel', 'Marcellus',
-                'Jamal', 'Leroy',  'Tyrone', 'Alphonse', 'Hakim', 'Terrence', 'Jerome', 'Alonzo'][0:12]
-# delete: Deion, Ebony, Kareem,Lamar,Lavon,Malik,Rasheed,Jermaine,
-# Tyree,Lamont,Darnell,Torrance,Theo
+african_male = ['alonzo', 'jamel', 'lerone', 'percell', 'theo', 'alphonse', 'jerome', 'leroy', 'rasaan',
+                'torrance', 'darnell', 'lamar', 'lionel', 'rashaun', 'vree', 'deion', 'lamont', 'malik',
+                'terrence', 'qrone', 'everol', 'lavon', 'marcellus', 'terryl', 'wardell']
 
-european_female = ['Melanie', 'Colleen', 'Ellen', 'Emily', 'Sarah', 'Rachel',
-                   'Carrie', 'Stephanie', 'Megan', 'Nancy', 'Katie', 'Heather', 'Betsy',
-                   'Kristin'][0:12]
-#delete: Amanda
+european_female = ['amanda', 'courtney', 'heather', 'melanie', 'sara', 'amber', 'crystal', 'katie',
+                   'meredith', 'shannon', 'betsy', 'donna', 'kristin', 'nancy', 'stephanie', 'bobbie-sue',
+                   'ellen', 'lauren', 'peggy', 'sue-ellen', 'colleen', 'emily', 'megan', 'rachel', 'wendy']
 
-european_male = ['Frank',   'Roger', 'Neil', 'Geoffrey',
-                 'Brad', 'Stephen', 'Peter',   'Jack',
-                 'Matthew', 'Jonathan', 'Josh', 'Andrew', 'Greg',
-                 'Justin', 'Alan',    'Adam',
-                 'Harry',  'Paul'][0:12]
-# delete: Lauren,Jill,Brendan,Meredith,Allison,Todd,Ryan,Courtney,Laurie,Brett,Anne
+european_male = ['adam', 'chip', 'harry', 'josh', 'roger', 'alan', 'frank', 'ian', 'justin', 'ryan', 'andrew',
+                 'fred', 'jack', 'matthew', 'stephen', 'brad', 'greg', 'jed', 'paul', 'todd', 'brandon', 'hank', 
+                 'jonathan', 'peter', 'wilbur']
 
 mexican_female = ['Maria', 'Yesenia', 'Adriana', 'Liset', 'Mayra', 'Alma',
                   'Carolina', 'Iliana', 'Sonia',
-                  'Karina', 'Alejandra', 'Brenda', 'Vanessa', 'Diana'][0:12]
-# delete: Ana
+                  'Karina', 'Alejandra', 'Brenda', 'Vanessa', 'Diana', 'Ana']
+
 mexican_male = ['Jesús', 'Rigoberto', 'César', 'Rogelio', 'José', 'Pedro',
                 'Antonio', 'Alberto', 'Alejandro',
-                'Alfredo', 'Juan', 'Miguel', 'Ricardo'][0:12]
-# delete: Angel,Jorge
-
+                'Alfredo', 'Juan', 'Miguel', 'Ricardo', 'Angel', 'Jorge']
 
 # BIAS
 african_common_bias = ['ghetto', 'unrefined', 'criminals', 'athletic', 'loud',
@@ -87,35 +81,57 @@ mexican_common_bias = ['poor', 'illegal-immigrant', 'darkskinned', 'uneducated',
                        'lazy', 'day-laborer', 'unintelligent', 'loud', 'gangster', 'short', 'overweight', 'macho', 'hardworker']
 
 
-# def get_effectsize(wd, A, B):
-#     cos_a = cosine_similarity(wd, A)  # .mean()
-#     cos_b = cosine_similarity(wd, B)  # .mean()
-#     cos_ab = np.concatenate((cos_a, cos_b), axis=1)
-#     delta_mean = cos_a.mean() - cos_b.mean()
-#     std = np.std(cos_ab, ddof=1)
-#     return delta_mean/std
-
-def get_vectors(client, list):
-    pass
-    # input - client and list of words
-    # output - numpy array of vectors corresponding to list of words
-
-    # init empty numpy array
-    # 
-
-def get_effectsize(client, wd, A, B):
-    cos_a = client.wv.similarity(wd, A)  # .mean()
-    cos_b = client.wv.similarity(wd, B)  # .mean()
-    print(cos_a)
-    print(cos_b)
+def get_effectsize(wd, A, B):
+    cos_a = cosine_similarity(wd, A)  # .mean()
+    cos_b = cosine_similarity(wd, B)  # .mean()
     cos_ab = np.concatenate((cos_a, cos_b), axis=1)
     delta_mean = cos_a.mean() - cos_b.mean()
     std = np.std(cos_ab, ddof=1)
     return delta_mean/std
 
-print(african_female)
-from gensim.models import KeyedVectors
+
+def get_vectors(client, names):
+    # input - client and list of words
+    # output - numpy array of vectors corresponding to list of words
+
+    # init empty list
+    words = []
+    vocab = list(client.wv.key_to_index.keys())
+
+    # check if word in vocab
+    for a in names:
+        if a.lower() in vocab:
+            words.append(a.lower())
+    print(words)
+
+    # get vectors of words
+    vectors = []
+    for item in words:
+        vectors.append(client.wv.get_vector(item))
+
+    # turn names to numpy
+    vectors = np.array(vectors, dtype=float)
+    print(vectors.shape)
+    return vectors
+
 
 client = KeyedVectors.load("../models/vectors_phrasal.kv")
 
-get_effectsize(client, 'table','chair','adam')
+#get_effectsize(client, 'table','chair','adam')
+af = get_vectors(client, african_female)
+am = get_vectors(client, african_male)
+
+vocab = list(client.wv.key_to_index.keys())
+
+biases = []
+for word in african_male_bias:
+    if word in vocab:
+        bias = get_effectsize(
+            np.array([client.wv.get_vector(word)]), am[0:5], af[0:5])
+        biases.append((word, bias))
+
+biases.sort(key=lambda x: x[1])
+for bias in biases:
+    print(bias)
+
+#print(af_names.lower().split(", "))

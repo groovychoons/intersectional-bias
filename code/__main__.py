@@ -18,6 +18,10 @@ def evaluation():
     print(len(model.wv))
     return True
 
+def name_clustering():
+    model = load_model.load_google_news()
+    
+
 if __name__ == "__main__": 
     #model = preprocessing()
     evaluation()
