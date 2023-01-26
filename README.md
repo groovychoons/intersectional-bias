@@ -96,3 +96,5 @@ Research questions:
 Novel contributions:
 - Using phrases, allows us to look at identities previously not able to
 - Detecting intersectional bias for Asian and Middle Eastern Americans
+- Using a one-versus-rest methodology instead of comparing two groups directly
+    - Used in Guo/Caliskan for validation experiments but not for the bias detection

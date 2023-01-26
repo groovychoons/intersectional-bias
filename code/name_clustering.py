@@ -41,12 +41,11 @@ print("Client downloaded")
 
 def check_vocab(client, words):
     words2 = []
-    if check_vocab:
-        vocab = list(client.key_to_index.keys())
-        # check if word in vocab
-        for a in words:
-            if a[0] in vocab:
-                words2.append([a[0]])
+    vocab = list(client.key_to_index.keys())
+    # check if word in vocab
+    for a in words:
+        if a[0] in vocab:
+            words2.append([a[0]])
     return(words2)
 
 # get vectors for each word
@@ -128,7 +127,7 @@ B = get_vectors(client, new_names + new_biases2)
 tsne = KernelPCA(n_components=2, kernel='rbf')
 Z_tsne = tsne.fit_transform(B)
 
-with open('../data/clusters.csv', 'w') as f:
+with open('../results/clusters.csv', 'w') as f:
     # using csv.writer method from CSV package
     write = csv.writer(f, delimiter=',')
 
@@ -136,7 +135,7 @@ with open('../data/clusters.csv', 'w') as f:
         write.writerow([new_names[i][0], y_kmeans[i], Z_tsne[i][0], Z_tsne[i][1], distances[i][y_kmeans[i]]])
 
 
-with open('../data/bias_tsne.csv', 'w') as f:
+with open('../results/bias_tsne.csv', 'w') as f:
     # using csv.writer method from CSV package
     write = csv.writer(f, delimiter=',')
 
